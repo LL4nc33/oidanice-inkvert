@@ -2,6 +2,7 @@ import { useCallback, useRef } from 'react'
 import { useConversion } from '../context/ConversionContext'
 import { getConverter } from '../converters/registry'
 import { downloadBlob } from '../lib/download'
+import { getOutputFilename } from '../lib/fileUtils'
 import { ConverterFile, ConversionSettings } from '../converters/types'
 
 export function useConverter() {
@@ -31,8 +32,7 @@ export function useConverter() {
       updateFile(fileId, { status: 'done', progress: 100, result })
 
       if (currentSettings.general.autoDownload) {
-        const outputName = file.name.replace(/\.[^.]+$/, `.${file.outputFormat}`)
-        downloadBlob(result, outputName)
+        downloadBlob(result, getOutputFilename(file.name, file.outputFormat))
       }
     } catch (err) {
       updateFile(fileId, {
@@ -42,8 +42,24 @@ export function useConverter() {
     }
   }, [updateFile])
 
-  const convertAll = useCallback(() => {
-    filesRef.current.filter((f: ConverterFile) => f.status === 'queued').forEach((f: ConverterFile) => convertFile(f.id))
+  const convertAll = useCallback(async () => {
+    const queued = filesRef.current
+      .filter((f: ConverterFile) => f.status === 'queued')
+      .map((f: ConverterFile) => f.id)
+
+    const running = new Set<Promise<void>>()
+
+    for (const id of queued) {
+      const task = convertFile(id)
+      running.add(task)
+      task.finally(() => running.delete(task))
+
+      if (running.size >= 2) {
+        await Promise.race(running)
+      }
+    }
+
+    await Promise.all(running)
   }, [convertFile])
 
   return { convertFile, convertAll }

@@ -1,6 +1,6 @@
 import { Card, Button, Badge, Progress } from '@oidanice/kindle-ui'
 import { ConverterFile } from '../converters/types'
-import { formatFileSize } from '../lib/fileUtils'
+import { formatFileSize, getOutputFilename } from '../lib/fileUtils'
 import { downloadBlob } from '../lib/download'
 import FormatSelector from './FormatSelector'
 
@@ -21,8 +21,7 @@ const STATUS_LABELS: Record<string, string> = {
 export default function FileCard({ file, onRemove, onConvert, onFormatChange }: FileCardProps) {
   const handleDownload = () => {
     if (file.result) {
-      const outputName = file.name.replace(/\.[^.]+$/, `.${file.outputFormat}`)
-      downloadBlob(file.result, outputName)
+      downloadBlob(file.result, getOutputFilename(file.name, file.outputFormat))
     }
   }
 

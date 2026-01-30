@@ -1,3 +1,7 @@
+export function getOutputFilename(name: string, outputFormat: string): string {
+  return name.replace(/\.[^.]+$/, `.${outputFormat}`)
+}
+
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 B'
   const units = ['B', 'KB', 'MB', 'GB']
