@@ -2,8 +2,6 @@ import { useState, useCallback } from 'react'
 import { ConverterFile, ConversionStatus } from '../converters/types'
 import { detectCategory, getExtension, getOutputFormats } from '../lib/formats'
 
-let fileIdCounter = 0
-
 export function useFileQueue() {
   const [files, setFiles] = useState<ConverterFile[]>([])
 
@@ -17,7 +15,7 @@ export function useFileQueue() {
         const defaultOutput = outputOptions.find(f => f.extension !== inputFormat)?.extension ?? outputOptions[0]?.extension ?? inputFormat
 
         return {
-          id: `file-${++fileIdCounter}`,
+          id: crypto.randomUUID() as string,
           file,
           name: file.name,
           size: file.size,

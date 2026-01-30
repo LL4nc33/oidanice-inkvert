@@ -1,6 +1,6 @@
 import { initializeImageMagick, ImageMagick, MagickFormat } from '@imagemagick/magick-wasm'
 import { Converter } from './types'
-import { FORMAT_REGISTRY } from '../lib/formats'
+import { getMimeType } from '../lib/mime'
 
 let initialized = false
 
@@ -38,10 +38,6 @@ function getMagickFormat(format: string): MagickFormat {
   const f = FORMAT_MAP[format.toLowerCase()]
   if (!f) throw new Error(`Unsupported image format: ${format}`)
   return f
-}
-
-function getMimeType(format: string): string {
-  return FORMAT_REGISTRY[format.toLowerCase()]?.mimeType ?? 'application/octet-stream'
 }
 
 export const imageConverter: Converter = {
