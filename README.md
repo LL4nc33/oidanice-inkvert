@@ -10,7 +10,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/version-0.0.1-black?style=flat-square" alt="Version" />
+  <img src="https://img.shields.io/badge/version-0.0.2-black?style=flat-square" alt="Version" />
   <img src="https://img.shields.io/badge/wasm-powered-black?style=flat-square" alt="WASM" />
   <img src="https://img.shields.io/badge/client--side-only-black?style=flat-square" alt="Client-side" />
   <img src="https://img.shields.io/badge/license-AGPL--3.0-black?style=flat-square" alt="License" />
@@ -106,4 +106,4 @@ WASM engines run sandboxed inside the browser. See [SECURITY.md](SECURITY.md) fo
 
 ---
 
-Built by [OidaNice](https://github.com/LL4nc33) -- powered by WebAssembly -- built with [Claude Workflow Engine](https://github.com/LL4nc33/claude-workflow-engine) -- v0.0.1
+Built by [OidaNice](https://github.com/LL4nc33) -- powered by WebAssembly -- built with [Claude Workflow Engine](https://github.com/LL4nc33/claude-workflow-engine) -- v0.0.2
