@@ -1,0 +1,13 @@
+# CWE Project Configuration
+version: "1.0"
+
+project:
+  name: "inkvert"
+
+workflow:
+  phases:
+    - plan      # Define product vision
+    - spec      # Write feature specifications
+    - tasks     # Break into implementable tasks
+    - build     # Implement with agents
+    - review    # Quality gates and verification
