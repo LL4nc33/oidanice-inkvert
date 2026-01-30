@@ -4,6 +4,7 @@ const converters: Partial<Record<FileCategory, () => Promise<Converter>>> = {
   image: async () => (await import('./ImageConverter')).imageConverter,
   audio: async () => (await import('./AudioConverter')).audioConverter,
   document: async () => (await import('./DocumentConverter')).documentConverter,
+  video: async () => (await import('./VideoConverter')).videoConverter,
 }
 
 export async function getConverter(category: FileCategory): Promise<Converter> {
