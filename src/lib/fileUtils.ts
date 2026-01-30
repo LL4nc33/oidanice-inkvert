@@ -20,19 +20,3 @@ export function getVideoDuration(file: File): Promise<number> {
     video.src = URL.createObjectURL(file)
   })
 }
-
-export function getAudioDuration(file: File): Promise<number> {
-  return new Promise((resolve, reject) => {
-    const audio = document.createElement('audio')
-    audio.preload = 'metadata'
-    audio.onloadedmetadata = () => {
-      resolve(audio.duration)
-      URL.revokeObjectURL(audio.src)
-    }
-    audio.onerror = () => {
-      URL.revokeObjectURL(audio.src)
-      reject(new Error('Could not read audio metadata'))
-    }
-    audio.src = URL.createObjectURL(file)
-  })
-}

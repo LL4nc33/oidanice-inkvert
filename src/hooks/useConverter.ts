@@ -1,29 +1,36 @@
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { useConversion } from '../context/ConversionContext'
 import { getConverter } from '../converters/registry'
 import { downloadBlob } from '../lib/download'
+import { ConverterFile, ConversionSettings } from '../converters/types'
 
 export function useConverter() {
   const { files, updateFile, settings } = useConversion()
 
+  const filesRef = useRef(files)
+  filesRef.current = files
+  const settingsRef = useRef(settings)
+  settingsRef.current = settings
+
   const convertFile = useCallback(async (fileId: string) => {
-    const file = files.find(f => f.id === fileId)
+    const file = filesRef.current.find((f: ConverterFile) => f.id === fileId)
     if (!file || file.status !== 'queued') return
 
     updateFile(fileId, { status: 'converting', progress: 0 })
 
     try {
+      const currentSettings: ConversionSettings = settingsRef.current
       const converter = await getConverter(file.category)
       const result = await converter.convert(
         file.file,
         file.outputFormat,
-        settings,
+        currentSettings,
         (progress) => updateFile(fileId, { progress })
       )
 
       updateFile(fileId, { status: 'done', progress: 100, result })
 
-      if (settings.general.autoDownload) {
+      if (currentSettings.general.autoDownload) {
         const outputName = file.name.replace(/\.[^.]+$/, `.${file.outputFormat}`)
         downloadBlob(result, outputName)
       }
@@ -33,11 +40,11 @@ export function useConverter() {
         error: err instanceof Error ? err.message : 'Conversion failed',
       })
     }
-  }, [files, updateFile, settings])
+  }, [updateFile])
 
   const convertAll = useCallback(() => {
-    files.filter(f => f.status === 'queued').forEach(f => convertFile(f.id))
-  }, [files, convertFile])
+    filesRef.current.filter((f: ConverterFile) => f.status === 'queued').forEach((f: ConverterFile) => convertFile(f.id))
+  }, [convertFile])
 
   return { convertFile, convertAll }
 }

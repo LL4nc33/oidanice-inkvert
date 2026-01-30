@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import { Layout, DarkModeToggle, Divider } from '@oidanice/kindle-ui'
 import { useConversion } from '../context/ConversionContext'
@@ -16,10 +17,11 @@ export default function Convert() {
     addFiles(newFiles)
   }
 
-  if (files.length === 0) {
-    navigate('/')
-    return null
-  }
+  useEffect(() => {
+    if (files.length === 0) navigate('/')
+  }, [files.length, navigate])
+
+  if (files.length === 0) return null
 
   return (
     <Layout
