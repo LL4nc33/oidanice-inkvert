@@ -8,7 +8,7 @@ async function ensureInitialized(): Promise<void> {
   if (initialized) return
 
   const wasmUrl = new URL(
-    '@imagemagick/magick-wasm/dist/magick.wasm',
+    '@imagemagick/magick-wasm/magick.wasm',
     import.meta.url
   )
   await initializeImageMagick(wasmUrl)
