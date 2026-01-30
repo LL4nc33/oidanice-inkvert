@@ -34,11 +34,14 @@ export default function FileCard({ file, onRemove, onConvert, onFormatChange }: 
           <p className="font-mono text-xs text-secondary">
             {formatFileSize(file.size)}
             {file.duration != null && ` · ${Math.round(file.duration)} sec`}
-            {file.status === 'done' && file.result && (
-              <> → {formatFileSize(file.result.size)}
-                {' '}({Math.round((1 - file.result.size / file.size) * 100)}% smaller)
-              </>
-            )}
+            {file.status === 'done' && file.result && (() => {
+              const ratio = Math.round((1 - file.result!.size / file.size) * 100)
+              return (
+                <> → {formatFileSize(file.result!.size)}
+                  {' '}({ratio > 0 ? `${ratio}% smaller` : `${Math.abs(ratio)}% larger`})
+                </>
+              )
+            })()}
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">

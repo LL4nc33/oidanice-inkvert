@@ -5,17 +5,18 @@ import { getMimeType } from '../lib/mime'
 import { getExtension } from '../lib/formats'
 
 let ffmpeg: FFmpeg | null = null
+let currentProgress: ((p: number) => void) | undefined
 
 async function getFFmpeg(onProgress?: (p: number) => void): Promise<FFmpeg> {
+  currentProgress = onProgress
+
   if (ffmpeg && ffmpeg.loaded) return ffmpeg
 
   ffmpeg = new FFmpeg()
 
-  if (onProgress) {
-    ffmpeg.on('progress', ({ progress }) => {
-      onProgress(20 + progress * 70)
-    })
-  }
+  ffmpeg.on('progress', ({ progress }) => {
+    currentProgress?.(20 + progress * 70)
+  })
 
   const baseURL = 'https://unpkg.com/@ffmpeg/core@0.12.6/dist/umd'
   await ffmpeg.load({

@@ -34,9 +34,9 @@ export const documentConverter: Converter = {
     } else if (inputExt === 'html') {
       const text = await file.text()
       if (outputFormat === 'txt' || outputFormat === 'md') {
-        const div = document.createElement('div')
-        div.innerHTML = text
-        content = div.textContent ?? ''
+        const parser = new DOMParser()
+        const doc = parser.parseFromString(text, 'text/html')
+        content = doc.body.textContent ?? ''
       } else {
         throw new Error(`Cannot convert HTML to ${outputFormat}`)
       }
